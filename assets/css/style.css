@@ -1,0 +1,34 @@
+*{
+  box-sizing: border-box;
+}
+.slider-container{
+  display: flex;
+  max-width: 500px;
+  position: relative;
+}
+.slide{
+  width: 100%;
+}
+.btn-slider{
+  position: absolute;
+  color:aqua;
+  font-size: 3rem;
+  font-weight: bold;;
+  background-color: rgba(0,0,0,0.05);
+  border-radius: 0.5rem;
+  padding: 10px;
+  border:none;
+  outline:none;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+.next-btn{
+  right:0;
+}
+.btn-slider:hover{
+  background-color: rgba(0,0,0,0.3);
+}
+.btn-slider:focus{
+  color: red;
+}

@@ -13,10 +13,10 @@ class Slider {
     if (typeof value !== 'number') {
       throw new TypeError();
     }
-    if (value > this._images.length - 1) {
-      this._currentIndex = 0;
+    if (value >= 0 || value < this._images.length) {
+      this._currentIndex = value;
     }
-    this._currentIndex = value;
+    else this._currentIndex = 0;
   }
 
   get currentSlide() {

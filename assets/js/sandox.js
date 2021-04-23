@@ -1,20 +1,13 @@
-function makeCounter() {
-  let count = 0;
-  return {
-    increment() {
-      return ++count;
-    },
-    decrement() {
-      return --count;
-    }
-  }
+const [btn1, btn2] = document.querySelectorAll('.button');
+/*const btnEnterHandler = () =>{
+  const temp = btn1.innerText;
+  btn1.innerText=btn2.innerText;
+  btn2.innerText=temp;
 }
-const counter1 = makeCounter();
-const counter2 = makeCounter();
-
-function createAdder(n) {
-  return (m) => {
-    return n += m;
+  btn1.addEventListener('mouseenter', btnEnterHandler)
+  btn2.addEventListener('mouseenter', btnEnterHandler)*/
+  const btnEnterHandler = () =>{
+    [btn1.innerText, btn2.innerText] = [btn2.innerText, btn1.innerText]
   }
-}
-const adder = createAdder(10);
+  btn1.addEventListener('mouseenter', btnEnterHandler)
+  btn2.addEventListener('mouseenter', btnEnterHandler)

@@ -32,49 +32,55 @@ const cardContainer = document.getElementById('root');
 
 const cardElement = data.map((place) => createPlaceCards(place));
 cardContainer.append(...cardElement)
+
 function createPlaceCards(place) {
-  const card = document.createElement('li');
-  card.classList.add('cardWrapper');
 
-  const container = document.createElement('article');
-  container.classList.add('cardContainer');
+  const initials = createElement("div", {
+    classNames: ["initials"]
+  }, document.createTextNode(place.name[0] || ""));
 
-  const imageWrapper = document.createElement('div');
-  imageWrapper.classList.add('cardImageWrapper');
+  const image = createElement("img", {
+    classNames: ["cardImage"],
+    handlers: {
+      error: handlerImageError,
+      load: handlerImageLoad
+    },
+  })
+  image.src = place.profilePicture;
+  image.hidden = true;
+
+  const name = createElement("h3", {
+    classNames: ["cardName"]
+  }, document.createTextNode(place.name || ""))
+
+  const description = createElement("p", {
+    classNames: ["cardDescription"]
+  }, document.createTextNode(place.description || ""))
+
+  const imageWrapper = createElement("div", {
+    classNames: ["cardImageWrapper"]},
+    initials, image,
+  )
   imageWrapper.style.backgroundColor = stringToColour(place.name || "");
 
-  const initials = document.createElement('div');
-  initials.classList.add('initials');
-  initials.append(document.createTextNode(place.name[0] || ""));
-
-  const image = document.createElement('img');
-  image.classList.add('cardImage');
-  image.src = place.profilePicture;
-  imageWrapper.append(initials,image);
-  image.hidden = true;
-  image.addEventListener('error',handlerImageError )
-  image.addEventListener('load',handlerImageLoad )
-  
-  const contentWrapper = document.createElement('div');
-  contentWrapper.classList.add('contentWrapper');
-
-  const name = document.createElement('h3');
-  name.classList.add('cardName');
-  name.append(document.createTextNode(place.name || ""));
-
-  const description = document.createElement("p");
-  description.classList.add('cardDescription');
-  description.append(document.createTextNode(place.description || ""));
-
-  contentWrapper.append(name, description);
-
-  container.append(imageWrapper, contentWrapper);
-  card.append(container);
+  const contentWrapper = createElement("div", {
+    classNames: ["contentWrapper"]},
+    name, description
+  )
+  const container = createElement("article", {
+    classNames: ["cardContainer"]},
+    imageWrapper, contentWrapper
+  )
+  const card = createElement("li", {
+    classNames: ["cardWrapper"]
+  },container);
 
   return card;
 }
 
-  function stringToColour(str) {
+
+
+function stringToColour(str) {
   var hash = 0;
   for (var i = 0; i < str.length; i++) {
     hash = str.charCodeAt(i) + ((hash << 5) - hash);
@@ -87,11 +93,30 @@ function createPlaceCards(place) {
   return colour;
 }
 
+function createElement(type, {
+  classNames = [],
+  handlers = {}
+}, ...children) {
+  const elem = document.createElement(type);
+  elem.classList.add(...classNames);
+
+  for (const [eventType, eventHandler] of Object.entries(handlers)) {
+    elem.addEventListener(eventType, eventHandler);
+  }
+  elem.append(...children);
+  return elem;
+}
+
 /*event listeners*/
 
-function handlerImageError({target}){
+function handlerImageError({
+  target
+}) {
   target.remove();
 }
-function handlerImageLoad({target}){
-  target.hidden=false;
+
+function handlerImageLoad({
+  target
+}) {
+  target.hidden = false;
 }

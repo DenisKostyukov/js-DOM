@@ -1,49 +1,114 @@
 'use strict';
+const cardsContainer = document.getElementById("root");
 
-const form = document.getElementById('root');
-const values = document.getElementById("root-list");
-const inputValues = [];
-const submit = (event) => {
-  event.preventDefault();
-  const {
-    target,
-    target: {
-      elements: {
-        email
-      }
-    }
-  } = event;
-  if (email.value) {
-    inputValues.push(email.value);
-    console.log(inputValues)
-    values.append(createListItem(email.value, inputValues.length - 1));
-    target.reset();
-  } else {
-    alert('Форма пустая');
-  }
+const cards = responseData.map((card) => createCard(card));
+cardsContainer.append(...cards);
+
+function createCard(card){
+  return createElement(
+    "li",
+    {classNames:["cardWrapper"]},
+    createElement(
+      "article",
+      {classNames:[cardsContainer]},
+      createImageWrapper(card),
+      createHeader(card)
+    )
+  )
 }
-form.addEventListener("submit", submit);
 
-function createListItem(value, id) {
-  const listItem = document.createElement("li");
-  const deleteBtn = document.createElement("button");
-  deleteBtn.classList.add("deleteBtn");
-  deleteBtn.id = id;
-  deleteBtn.addEventListener("click", deleteListItem);
-  deleteBtn.append(document.createTextNode("Delete"));
-  listItem.append(document.createTextNode(value), deleteBtn);
-  return listItem;
+function createCardImage(link) {
+  const img = createElement("img", {
+    classNames: ["cardImage"],
+    handlers: {
+      error: handleImageError,
+      load: handleImageLoad,
+    },
+  });
+  img.src = link;
+  img.hidden = true;
+
+  return img;
 }
-const btn = document.getElementsByClassName("deleteBtn");
 
-function deleteListItem({
-  target
-}) {
-  target.parentNode.parentNode.removeChild(target.parentNode);
-  inputValues.splice(target.id, 1);
+function createImageWrapper({firstName,lastName, profilePicture}){
+  const imageWrapper = createElement(
+    "div",
+    {classNames:["cardImageWrapper"]},
+    createElement(
+      "div",
+      {classNames:"initials"},
+      document.createTextNode(firstName[0] + lastName[0] || ""),
+    ),
+    createCardImage(profilePicture)
+  )
+  imageWrapper.style.background = stringToColor(firstName);
+  return imageWrapper;
+}
+function createHeader({firstName, lastName}){
+  return createElement(
+    "div",
+    {
+      classNames:["cardHeader"]
+    },
+    createElement(
+      "h3",
+      {
+        classNames:["userCardName"],
+      },
+      document.createTextNode(`${firstName} ${lastName}` || "")
+    )
+  )
+}
+/**
+ *
+ * @param {string} tagName
+ * @param {object} options
+ * @param {string[]} options.classNames - css classes
+ * @param {object} options.handlers - event handlers
+ * @param  {...Node} children
+ * @returns {HTMLElement}
+ */
+ function createElement(
+  tagName, {
+    classNames = [],
+    handlers = {},
+    attributes = {},
+  } = {},
+  ...children
+) {
+  const elem = document.createElement(tagName);
+  elem.classList.add(...classNames);
 
-  console.log(inputValues)
-  for (let i = 0; i < inputValues.length; i++) {
-    btn[i].id = i;
+  for(const [attrName, attrValue] of Object.entries(attributes)){
+    elem.setAttribute(attrName,attrValue);
   }
+
+  for (const [eventType, eventHandler] of Object.entries(handlers)) {
+    elem.addEventListener(eventType, eventHandler);
+  }
+
+  elem.append(...children);
+  return elem;
+}
+
+function handleImageError({ target }) {
+  target.remove();
+}
+
+function handleImageLoad({ target }) {
+  target.hidden = false;
+}
+
+function stringToColor(str) {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = str.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  let colour = "#";
+  for (let i = 0; i < 3; i++) {
+    const value = (hash >> (i * 8)) & 0xff;
+    colour += ("00" + value.toString(16)).substr(-2);
+  }
+  return colour;
 }

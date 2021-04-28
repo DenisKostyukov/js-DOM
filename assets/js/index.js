@@ -4,15 +4,18 @@ const cardsContainer = document.getElementById("root");
 const cards = responseData.map((card) => createCard(card));
 cardsContainer.append(...cards);
 
-function createCard(card){
+function createCard(card) {
   return createElement(
-    "li",
-    {classNames:["cardWrapper"]},
+    "li", {
+      classNames: ["cardWrapper"]
+    },
     createElement(
-      "article",
-      {classNames:[cardsContainer]},
+      "article", {
+        classNames: ["cardContainer"]
+      },
       createImageWrapper(card),
-      createHeader(card)
+      createcardContent(card),
+      createIcons(card)
     )
   )
 }
@@ -31,13 +34,19 @@ function createCardImage(link) {
   return img;
 }
 
-function createImageWrapper({firstName,lastName, profilePicture}){
+function createImageWrapper({
+  firstName,
+  lastName,
+  profilePicture
+}) {
   const imageWrapper = createElement(
-    "div",
-    {classNames:["cardImageWrapper"]},
+    "div", {
+      classNames: ["cardImageWrapper"]
+    },
     createElement(
-      "div",
-      {classNames:"initials"},
+      "div", {
+        classNames: ["initials"]
+      },
       document.createTextNode(firstName[0] + lastName[0] || ""),
     ),
     createCardImage(profilePicture)
@@ -45,21 +54,83 @@ function createImageWrapper({firstName,lastName, profilePicture}){
   imageWrapper.style.background = stringToColor(firstName);
   return imageWrapper;
 }
-function createHeader({firstName, lastName}){
+
+function createcardContent({
+  firstName,
+  lastName
+}) {
+  const fullName = `${firstName} ${lastName}`;
   return createElement(
-    "div",
-    {
-      classNames:["cardHeader"]
+    "div", {
+      classNames: ["cardContent"]
     },
     createElement(
-      "h3",
-      {
-        classNames:["userCardName"],
+      "h3", {
+        classNames: ["userCardName"],
       },
-      document.createTextNode(`${firstName} ${lastName}` || "")
+      document.createTextNode(fullName.trim() != "" ? fullName : "")
+    ), createElement(
+      "p", {
+        classNames: ["cardDescription"],
+      },
+      document.createTextNode("Description")
     )
   )
 }
+
+function createIcons({
+  contacts
+}) {
+  let links = []
+  for (let i = 0; i < contacts.length; i++) {
+    links[i] = createElement(
+      "a", {
+        classNames: ["cardLink"],
+        attributes: {
+          href: contacts[i],
+          target: "_blank",
+        },
+      },
+      createElement(
+        "i", {
+          classNames: ["fab", getSocial(contacts)[i]],
+        }
+      )
+    );
+  }
+  const icons = createElement(
+    "div", {
+      classNames: ["icons"]
+    },
+    ...links
+  );
+
+  return icons;
+}
+
+function getSocial(links) {
+  let className = [];
+  for (let i = 0; i < links.length; i++) {
+    const socialLink = new URL(links[i]);
+    if (socialLink.hostname === "www.facebook.com") {
+      className.push("fa-facebook-f");
+    }
+    if (socialLink.hostname === "www.instagram.com") {
+      className.push("fa-instagram");
+    }
+    if (socialLink.hostname === "twitter.com") {
+      className.push("fa-twitter");
+    }
+    if (socialLink.hostname === "dribbble.com") {
+      className.push("fa-dribbble");
+    }
+    if (socialLink.hostname === "www.linkedin.com") {
+      className.push("fa-linkedin-in");
+    }
+  }
+  return className;
+}
+
 /**
  *
  * @param {string} tagName
@@ -69,7 +140,7 @@ function createHeader({firstName, lastName}){
  * @param  {...Node} children
  * @returns {HTMLElement}
  */
- function createElement(
+function createElement(
   tagName, {
     classNames = [],
     handlers = {},
@@ -80,8 +151,8 @@ function createHeader({firstName, lastName}){
   const elem = document.createElement(tagName);
   elem.classList.add(...classNames);
 
-  for(const [attrName, attrValue] of Object.entries(attributes)){
-    elem.setAttribute(attrName,attrValue);
+  for (const [attrName, attrValue] of Object.entries(attributes)) {
+    elem.setAttribute(attrName, attrValue);
   }
 
   for (const [eventType, eventHandler] of Object.entries(handlers)) {
@@ -92,11 +163,15 @@ function createHeader({firstName, lastName}){
   return elem;
 }
 
-function handleImageError({ target }) {
+function handleImageError({
+  target
+}) {
   target.remove();
 }
 
-function handleImageLoad({ target }) {
+function handleImageLoad({
+  target
+}) {
   target.hidden = false;
 }
 

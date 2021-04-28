@@ -1,1 +1,72 @@
 @import './reset.css';
+*{
+  box-sizing: border-box;
+}
+:root{
+  font-size: 10px;
+  font-family: "Raleway", sans-serif;
+}
+.cardsContainer {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-evenly;
+}
+.cardWrapper{
+  margin:20px 10px;
+}
+.cardContainer{
+  width: 270px;
+  max-width: 270px;
+}
+.cardImageWrapper {
+  display: flex;
+  justify-content: center;
+  position: relative;
+  width: inherit;
+  height: 270px;
+  background-color: black;
+}
+.cardImage {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+
+  height: inherit;
+  width: inherit;
+  object-fit: cover;
+  object-position: center;
+}
+.initials {
+  align-self: center;
+  font-size: 2rem;
+  color: white;
+}
+.cardHeader{
+  text-align: center;
+  padding: 10px 0;
+}
+.userCardName{
+  font-size: 2.2rem;
+}
+.icons{
+  display: flex;
+  justify-content: space-around;
+  text-align: center;
+}
+.cardLink{
+  display: inline-block;
+  width: 40px;
+  max-width: 40px;
+  padding: 5px;
+  border: 1px solid #c6cacc;
+  border-radius: 5px;
+  color: #c6cacc;
+  font-size: 2rem;
+  transition: .3s all ease;
+}
+.cardLink:hover{
+  background-color: #e84545;
+  color: #fff;
+}

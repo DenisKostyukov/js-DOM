@@ -35,10 +35,11 @@ function createListItem(value, id) {
   listItem.append(document.createTextNode(value),deleteBtn);
   return listItem;
 }
+const btn = document.getElementsByClassName("deleteBtn");
  function deleteListItem({target}){
   target.parentNode.parentNode.removeChild(target.parentNode);
   inputValues.splice(target.id,1);
-  const btn = document.getElementsByClassName("deleteBtn");
+  
   console.log(inputValues)
   for(let i=0;i<inputValues.length;i++){
     btn[i].id=i;

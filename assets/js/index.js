@@ -13,15 +13,14 @@ const submit = (event) => {
       }
     }
   } = event;
-  if(email.value){
+  if (email.value) {
     inputValues.push(email.value);
     console.log(inputValues)
-    values.append(createListItem(email.value, inputValues.length-1));
+    values.append(createListItem(email.value, inputValues.length - 1));
     target.reset();
-  }
-  else{
+  } else {
     alert('Форма пустая');
-  } 
+  }
 }
 form.addEventListener("submit", submit);
 
@@ -29,20 +28,22 @@ function createListItem(value, id) {
   const listItem = document.createElement("li");
   const deleteBtn = document.createElement("button");
   deleteBtn.classList.add("deleteBtn");
-  deleteBtn.id=id;
+  deleteBtn.id = id;
   deleteBtn.addEventListener("click", deleteListItem);
   deleteBtn.append(document.createTextNode("Delete"));
-  listItem.append(document.createTextNode(value),deleteBtn);
+  listItem.append(document.createTextNode(value), deleteBtn);
   return listItem;
 }
 const btn = document.getElementsByClassName("deleteBtn");
- function deleteListItem({target}){
+
+function deleteListItem({
+  target
+}) {
   target.parentNode.parentNode.removeChild(target.parentNode);
-  inputValues.splice(target.id,1);
-  
+  inputValues.splice(target.id, 1);
+
   console.log(inputValues)
-  for(let i=0;i<inputValues.length;i++){
-    btn[i].id=i;
+  for (let i = 0; i < inputValues.length; i++) {
+    btn[i].id = i;
   }
- }
- 
+}

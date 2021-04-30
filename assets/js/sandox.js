@@ -1,7 +1,13 @@
-const testObj ={
-  foo:"bar",
-  sum(a, b){
-    console.log(this)
-  }
+
+const counter= ()=>{
+  let i = 0;
+    const id = setInterval(()=>{
+      i++
+      if(i===20){
+        clearInterval(id)
+      }
+      console.log(i)
+    },500);
+
 }
-const sum2 = testObj.sum.bind();
+

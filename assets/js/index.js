@@ -25,18 +25,21 @@ function createCard(card) {
     )
   )
 }
-
+ 
 function createCardImage(link){
   const img = createElement("img", {
     classNames: ["cardImage"],
+    attributes: {
+      src:link,
+      hidden:true
+    }
   });
-  img.src = link;
-  img.hidden = true;
 
   return new Promise((resolve, reject)=>{
     img.addEventListener("load",()=>{
-      resolve(img)
       img.hidden = false;
+      resolve(img)
+      
     })
     img.addEventListener("error",()=>{
       img.remove();

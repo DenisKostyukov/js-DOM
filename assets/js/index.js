@@ -1,8 +1,14 @@
 'use strict';
 const cardsContainer = document.getElementById("root");
-
-const cards = responseData.map((card) => createCard(card));
-cardsContainer.append(...cards);
+fetch('../data.json')
+  .then((response) => response.json())
+  .then((data) => {
+    const cards = data.map((card) => createCard(card));
+    cardsContainer.append(...cards)
+  })
+  .catch((error) => {
+    console.log(error)
+  });
 
 function createCard(card) {
   return createElement(
@@ -20,18 +26,24 @@ function createCard(card) {
   )
 }
 
-function createCardImage(link) {
+function createCardImage(link){
   const img = createElement("img", {
     classNames: ["cardImage"],
-    handlers: {
-      error: handleImageError,
-      load: handleImageLoad,
-    },
   });
   img.src = link;
   img.hidden = true;
 
-  return img;
+  return new Promise((resolve, reject)=>{
+    img.addEventListener("load",()=>{
+      resolve(img)
+      img.hidden = false;
+    })
+    img.addEventListener("error",()=>{
+      img.remove();
+      reject(new Error("error"))
+    })
+  });
+  
 }
 
 function createImageWrapper({
@@ -50,6 +62,13 @@ function createImageWrapper({
       document.createTextNode(firstName[0] + lastName[0] || ""),
     ),
     createCardImage(profilePicture)
+    .then((img)=>{
+      imageWrapper.append(img)
+    })
+    .catch((error)=>{
+      console.log(error)
+    })
+
   )
   imageWrapper.style.background = stringToColor(firstName);
   return imageWrapper;

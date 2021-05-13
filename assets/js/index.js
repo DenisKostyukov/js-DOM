@@ -25,28 +25,31 @@ function createCard(card) {
     )
   )
 }
- 
-function createCardImage(link){
+
+function createCardImage(link) {
   const img = createElement("img", {
     classNames: ["cardImage"],
     attributes: {
-      src:link,
-      hidden:true
+      src: link,
+      hidden: true
     }
   });
+  load(img)
+    .then(() => img.hidden = false)
+    .catch(() => img.remove())
+  return img;
+};
 
-  return new Promise((resolve, reject)=>{
-    img.addEventListener("load",()=>{
-      img.hidden = false;
-      resolve(img)
-      
+function load(img) {
+  return new Promise((resolve, reject) => {
+    img.addEventListener("load", () => {
+      resolve()
+
     })
-    img.addEventListener("error",()=>{
-      img.remove();
-      reject(new Error("error"))
+    img.addEventListener("error", () => {
+      reject()
     })
-  });
-  
+  })
 }
 
 function createImageWrapper({
@@ -65,12 +68,7 @@ function createImageWrapper({
       document.createTextNode(firstName[0] + lastName[0] || ""),
     ),
     createCardImage(profilePicture)
-    .then((img)=>{
-      imageWrapper.append(img)
-    })
-    .catch((error)=>{
-      console.log(error)
-    })
+
 
   )
   imageWrapper.style.background = stringToColor(firstName);
